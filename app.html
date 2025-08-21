@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSG Tech Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'psg-maroon': '#8B1538',
+                        'psg-light-maroon': '#A61E4D',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .gradient-green {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .gradient-orange {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .role-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .role-card.selected {
+            border: 3px solid #8B1538;
+            background: linear-gradient(135deg, #8B1538 0%, #A61E4D 100%);
+            color: white;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .test-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .sidebar-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+        .campus-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        .shape:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 60%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 4s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Enhanced Login Page -->
+    <div id="loginPage" class="min-h-screen relative campus-bg">
+        <div class="floating-shapes">
+            <div class="shape w-32 h-32 bg-white rounded-full"></div>
+            <div class="shape w-24 h-24 bg-white rounded-lg"></div>
+            <div class="shape w-40 h-40 bg-white rounded-full"></div>
+        </div>
+        
+        <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-6">
+            <!-- PSG Logo -->
+            <div class="mb-8">
+                <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl mb-4">
+                    <svg width="60" height="60" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" fill="#8B1538"/>
+                        <text x="50" y="35" text-anchor="middle" fill="white" font-size="12" font-weight="bold">PSG</text>
+                        <text x="50" y="50" text-anchor="middle" fill="white" font-size="6">COLLEGE OF</text>
+                        <text x="50" y="62" text-anchor="middle" fill="white" font-size="6">TECHNOLOGY</text>
+                    </svg>
+                </div>
+                <h1 class="text-white text-3xl font-bold text-center">PSG College of Technology</h1>
+                <p class="text-white text-center mt-2 font-black text-2xl tracking-widest" style="font-family: 'Arial Black', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); letter-spacing: 0.2em;">EDUCHECK</p>
+            </div>
+            
+            <!-- Login Card -->
+            <div class="login-card rounded-3xl p-8 w-full max-w-md shadow-2xl">
+                <h2 class="text-psg-maroon text-2xl font-bold text-center mb-8">Welcome Back!</h2>
+                
+                <!-- Role Selection -->
+                <div class="mb-6">
+                    <p class="text-gray-700 font-semibold mb-4 text-center">I am a:</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="role-card bg-white border-2 border-gray-200 rounded-2xl p-4 text-center" onclick="selectRole('teacher')">
+                            <div class="text-4xl mb-2">👨‍🏫</div>
+                            <p class="font-semibold text-gray-800">Teacher</p>
+                        </div>
+                        <div class="role-card bg-white border-2 border-gray-200 rounded-2xl p-4 text-center" onclick="selectRole('student')">
+                            <div class="text-4xl mb-2">👨‍🎓</div>
+                            <p class="font-semibold text-gray-800">Student</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Options -->
+                <div id="loginOptions" class="space-y-4 hidden">
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="showSignIn()" class="bg-blue-500 text-white py-3 rounded-2xl font-semibold hover:bg-blue-600 transition-all duration-300">
+                            Sign In
+                        </button>
+                        <button onclick="showSignUp()" class="bg-green-500 text-white py-3 rounded-2xl font-semibold hover:bg-green-600 transition-all duration-300">
+                            Sign Up
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sign In Form -->
+                <div id="signInForm" class="space-y-4 hidden">
+                    <input type="text" id="signInName" placeholder="Enter your name" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <input type="password" id="signInPassword" placeholder="Enter your password" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <button onclick="signIn()" class="w-full bg-psg-maroon text-white py-4 rounded-2xl font-semibold hover:bg-psg-light-maroon transition-all duration-300 transform hover:scale-105">
+                        <span id="signInButtonText">Sign In as Teacher</span>
+                    </button>
+                    <button onclick="showForgotPassword()" class="w-full text-psg-maroon text-sm hover:underline">
+                        Forgot Password?
+                    </button>
+                    <button onclick="backToOptions()" class="w-full text-gray-600 text-sm hover:underline">
+                        ← Back to Options
+                    </button>
+                </div>
+
+                <!-- Sign Up Form -->
+                <div id="signUpForm" class="space-y-4 hidden">
+                    <input type="text" id="signUpName" placeholder="Enter your full name" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <input type="email" id="signUpEmail" placeholder="Enter your email address" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <input type="password" id="signUpPassword" placeholder="Create a password" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <button onclick="signUp()" class="w-full bg-psg-maroon text-white py-4 rounded-2xl font-semibold hover:bg-psg-light-maroon transition-all duration-300 transform hover:scale-105">
+                        <span id="signUpButtonText">Sign Up as Teacher</span>
+                    </button>
+                    <button onclick="backToOptions()" class="w-full text-gray-600 text-sm hover:underline">
+                        ← Back to Options
+                    </button>
+                </div>
+
+                <!-- Forgot Password Form -->
+                <div id="forgotPasswordForm" class="space-y-4 hidden">
+                    <input type="text" id="forgotName" placeholder="Enter your name" 
+                           class="w-full p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-psg-maroon focus:border-transparent">
+                    <button onclick="resetPassword()" class="w-full bg-psg-maroon text-white py-4 rounded-2xl font-semibold hover:bg-psg-light-maroon transition-all duration-300 transform hover:scale-105">
+                        Send Reset Link
+                    </button>
+                    <button onclick="backToSignIn()" class="w-full text-gray-600 text-sm hover:underline">
+                        ← Back to Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+            <div class="p-6 border-b">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                        DS
+                    </div>
+                    <div>
+                        <h3 id="sidebarName" class="font-bold text-gray-800">Dr. Sathiya</h3>
+                        <p class="text-sm text-gray-600">Faculty</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="p-4 space-y-2">
+                <div onclick="showDashboard()" class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer transition-all duration-300">
+                    <span class="text-xl">🏠</span>
+                    <span>Dashboard</span>
+                </div>
+                <div onclick="showProfile()" class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer transition-all duration-300">
+                    <span class="text-xl">👤</span>
+                    <span>Profile</span>
+                </div>
+                <div onclick="showSettings()" class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer transition-all duration-300">
+                    <span class="text-xl">⚙️</span>
+                    <span>Settings</span>
+                </div>
+                <div onclick="logout()" class="sidebar-item flex items-center space-x-3 p-3 rounded-xl cursor-pointer transition-all duration-300 text-red-600">
+                    <span class="text-xl">🚪</span>
+                    <span>Logout</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Overlay -->
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeSidebar()"></div>
+
+        <!-- Header -->
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSidebar()" class="text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">
+                        ☰
+                    </button>
+                    <div>
+                        <h1 id="welcomeText" class="text-xl font-bold">Welcome, Dr. Sathiya</h1>
+                        <p class="text-blue-100 text-sm">This Semester at a Glance</p>
+                    </div>
+                </div>
+                <button onclick="showAddClass()" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-xl font-semibold transition-all duration-300">
+                    + Add Class
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="p-6">
+            <!-- Course Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Advanced Mathematics Card -->
+                <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+                    <div class="gradient-blue p-6 relative">
+                        <div class="flex justify-between items-start">
+                            <div onclick="openCourse('Advanced Mathematics', 'Dr. Sarah Wilson', 'blue')" class="cursor-pointer flex-1">
+                                <h3 class="text-white text-xl font-bold mb-2">Advanced Mathematics</h3>
+                                <p class="text-blue-100 text-base mb-3">Dr. Sarah Wilson</p>
+                                <div class="mt-3 flex items-center space-x-3">
+                                    <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                                        <span class="text-white text-sm font-semibold">Progress: 8/10</span>
+                                    </div>
+                                    <div class="bg-white bg-opacity-20 rounded-full px-3 py-2">
+                                        <span class="text-white text-sm font-bold">80%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+
+                                <div class="relative">
+                                    <button onclick="toggleCourseMenu('math')" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all duration-300">
+                                        ⋮
+                                    </button>
+                                    <div id="mathMenu" class="hidden absolute right-0 top-10 bg-white rounded-lg shadow-lg py-2 w-32 z-10">
+                                        <button onclick="shareClassCode('MATH2024')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📤 Share
+                                        </button>
+                                        <button onclick="unenrollFromCourse('Advanced Mathematics')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            👥 Unenroll
+                                        </button>
+                                        <button onclick="archiveCourseFromCard('Advanced Mathematics')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📦 Archive
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <button onclick="openCourse('Advanced Mathematics', 'Dr. Sarah Wilson', 'blue')" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all duration-300">
+                            <span>Open Course</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Physics Fundamentals Card -->
+                <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+                    <div class="gradient-green p-6 relative">
+                        <div class="flex justify-between items-start">
+                            <div onclick="openCourse('Physics Fundamentals', 'Prof. Michael Chen', 'green')" class="cursor-pointer flex-1">
+                                <h3 class="text-white text-xl font-bold mb-2">Physics Fundamentals</h3>
+                                <p class="text-green-100 text-base mb-3">Prof. Michael Chen</p>
+                                <div class="mt-3 flex items-center space-x-3">
+                                    <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                                        <span class="text-white text-sm font-semibold">Progress: 6/10</span>
+                                    </div>
+                                    <div class="bg-white bg-opacity-20 rounded-full px-3 py-2">
+                                        <span class="text-white text-sm font-bold">60%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+
+                                <div class="relative">
+                                    <button onclick="toggleCourseMenu('physics')" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all duration-300">
+                                        ⋮
+                                    </button>
+                                    <div id="physicsMenu" class="hidden absolute right-0 top-10 bg-white rounded-lg shadow-lg py-2 w-32 z-10">
+                                        <button onclick="shareClassCode('PHYS2024')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📤 Share
+                                        </button>
+                                        <button onclick="unenrollFromCourse('Physics Fundamentals')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            👥 Unenroll
+                                        </button>
+                                        <button onclick="archiveCourseFromCard('Physics Fundamentals')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📦 Archive
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <button onclick="openCourse('Physics Fundamentals', 'Prof. Michael Chen', 'green')" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all duration-300">
+                            <span>Open Course</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Computer Science Card -->
+                <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+                    <div class="gradient-orange p-6 relative">
+                        <div class="flex justify-between items-start">
+                            <div onclick="openCourse('Computer Science', 'Dr. Emily Rodriguez', 'orange')" class="cursor-pointer flex-1">
+                                <h3 class="text-white text-xl font-bold mb-2">Computer Science</h3>
+                                <p class="text-orange-100 text-base mb-3">Dr. Emily Rodriguez</p>
+                                <div class="mt-3 flex items-center space-x-3">
+                                    <div class="bg-white bg-opacity-20 rounded-full px-4 py-2">
+                                        <span class="text-white text-sm font-semibold">Progress: 9/10</span>
+                                    </div>
+                                    <div class="bg-white bg-opacity-20 rounded-full px-3 py-2">
+                                        <span class="text-white text-sm font-bold">90%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+
+                                <div class="relative">
+                                    <button onclick="toggleCourseMenu('cs')" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all duration-300">
+                                        ⋮
+                                    </button>
+                                    <div id="csMenu" class="hidden absolute right-0 top-10 bg-white rounded-lg shadow-lg py-2 w-32 z-10">
+                                        <button onclick="shareClassCode('CS2024')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📤 Share
+                                        </button>
+                                        <button onclick="unenrollFromCourse('Computer Science')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            👥 Unenroll
+                                        </button>
+                                        <button onclick="archiveCourseFromCard('Computer Science')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            📦 Archive
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <button onclick="openCourse('Computer Science', 'Dr. Emily Rodriguez', 'orange')" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all duration-300">
+                            <span>Open Course</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profilePage" class="hidden min-h-screen bg-gray-50">
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center">
+                <button onclick="showDashboard()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                <h1 class="text-xl font-bold">Profile Settings</h1>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
+                <div class="flex flex-col items-center mb-6">
+                    <div class="relative">
+                        <div id="profilePicture" class="w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-3xl mb-4">
+                            DS
+                        </div>
+                        <button onclick="uploadProfilePicture()" class="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors">
+                            📷
+                        </button>
+                    </div>
+                    <input type="file" id="profileImageInput" accept="image/*" class="hidden" onchange="handleProfileImageUpload(event)">
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="profileName" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="profileEmail" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                        <select id="profileDepartment" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="CSE">Computer Science Engineering</option>
+                            <option value="ECE">Electronics and Communication</option>
+                            <option value="EEE">Electrical and Electronics</option>
+                            <option value="MECH">Mechanical Engineering</option>
+                        </select>
+                    </div>
+
+                    <button onclick="saveProfile()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition-colors">
+                        Save Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Detail Page -->
+    <div id="courseDetail" class="hidden min-h-screen bg-gray-50">
+        <div id="courseHeader" class="gradient-blue text-white p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <button onclick="showDashboard()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                    <div>
+                        <h1 id="courseTitle" class="text-xl font-bold">Advanced Mathematics</h1>
+                        <p id="courseInstructor" class="text-blue-100 text-sm">Dr. Sarah Wilson</p>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="showShareCode()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300">
+                        📤 Share
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Navigation -->
+        <div class="bg-white border-b">
+            <div class="flex space-x-6 px-6 overflow-x-auto">
+                <button onclick="showCourseTab('stream')" class="course-tab py-4 px-2 border-b-2 border-transparent hover:border-blue-500 transition-colors whitespace-nowrap" data-tab="stream">
+                    📢 Stream
+                </button>
+                <button onclick="showCourseTab('classwork')" class="course-tab py-4 px-2 border-b-2 border-transparent hover:border-blue-500 transition-colors whitespace-nowrap" data-tab="classwork">
+                    📚 Classwork
+                </button>
+                <button onclick="showCourseTab('people')" class="course-tab py-4 px-2 border-b-2 border-transparent hover:border-blue-500 transition-colors whitespace-nowrap" data-tab="people">
+                    👥 People
+                </button>
+                <button onclick="showCourseTab('grades')" class="course-tab py-4 px-2 border-b-2 border-transparent hover:border-blue-500 transition-colors whitespace-nowrap" data-tab="grades">
+                    📊 Grades
+                </button>
+            </div>
+        </div>
+
+        <!-- Course Content -->
+        <div class="p-6">
+            <!-- Stream Tab -->
+            <div id="streamTab" class="course-content">
+                <div class="space-y-4">
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">DS</div>
+                            <div class="flex-1">
+                                <p class="font-semibold">Assignment posted: Calculus Problem Set</p>
+                                <p class="text-sm text-gray-600">Due: Tomorrow, 11:59 PM</p>
+                                <div class="flex items-center space-x-2 mt-2">
+                                    <button onclick="sendReminder()" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-yellow-200 transition-colors">
+                                        🔔 Send Reminder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">DS</div>
+                            <div class="flex-1">
+                                <p class="font-semibold">Tutorial 1 results published</p>
+                                <p class="text-sm text-gray-600">Average score: 85%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classwork Tab -->
+            <div id="classworkTab" class="course-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Assignments & Tests</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="showSubmissions()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-semibold transition-colors">
+                            📄 Student Submissions
+                        </button>
+                        <button onclick="createAssignment()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold transition-colors">
+                            + Create Test
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div onclick="openTest('Tutorial 1')" class="test-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 cursor-pointer hover:shadow-md transition-all duration-300">
+                        <h3 class="font-semibold text-gray-800">Tutorial 1</h3>
+                        <p class="text-sm text-orange-600 mb-2">🔄 In Progress</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-blue-600">56 Students</span>
+                            <span class="text-xs text-orange-600">15 Scanned</span>
+                        </div>
+                    </div>
+                    <div onclick="openTest('Tutorial 2')" class="test-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 cursor-pointer hover:shadow-md transition-all duration-300">
+                        <h3 class="font-semibold text-gray-800">Tutorial 2</h3>
+                        <p class="text-sm text-gray-600 mb-2">Not conducted</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-blue-600">56 Students</span>
+                        </div>
+                    </div>
+                    <div onclick="openTest('CA 1')" class="test-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 cursor-pointer hover:shadow-md transition-all duration-300">
+                        <h3 class="font-semibold text-gray-800">CA 1</h3>
+                        <p class="text-sm text-purple-600 mb-2">🤖 AI Correcting</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-green-600">56 Students</span>
+                            <span class="text-xs text-purple-600">23 Corrected</span>
+                        </div>
+                    </div>
+                    <div onclick="openTest('CA 2')" class="test-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 cursor-pointer hover:shadow-md transition-all duration-300">
+                        <h3 class="font-semibold text-gray-800">CA 2</h3>
+                        <p class="text-sm text-gray-600 mb-2">Not conducted</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-green-600">56 Students</span>
+                        </div>
+                    </div>
+                    <div onclick="openTest('Practice Tests')" class="test-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-yellow-500 cursor-pointer hover:shadow-md transition-all duration-300">
+                        <h3 class="font-semibold text-gray-800">Practice Tests</h3>
+                        <p class="text-sm text-gray-600 mb-2">Unlimited</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-yellow-600">56 Students</span>
+                        </div>
+                    </div>
+                    <div onclick="openTest('Final Exam')" class="test-card bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500 cursor-pointer hover:shadow-md transition-all duration-300">
+                        <h3 class="font-semibold text-gray-800">Final Exam</h3>
+                        <p class="text-sm text-gray-600 mb-2">Not conducted</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-red-600">56 Students</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Statistics -->
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <h3 class="font-semibold text-gray-800 mb-3">Course Statistics</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p class="text-2xl font-bold text-blue-600">56</p>
+                            <p class="text-sm text-gray-600">Total Students</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-green-600">2</p>
+                            <p class="text-sm text-gray-600">Tests Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- People Tab -->
+            <div id="peopleTab" class="course-content hidden">
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h3 class="font-bold text-lg mb-4">Enrolled Students (56)</h3>
+                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AK</div>
+                                <div>
+                                    <p class="font-semibold">Arun Kumar</p>
+                                    <p class="text-sm text-gray-600">23N224@psgtech.ac.in</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">PS</div>
+                                <div>
+                                    <p class="font-semibold">Priya Sharma</p>
+                                    <p class="text-sm text-gray-600">23N225@psgtech.ac.in</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grades Tab -->
+            <div id="gradesTab" class="course-content hidden">
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">Grade Management</h3>
+                        <button onclick="publishGrades()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-semibold transition-colors">
+                            📢 Publish All Grades
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3">Student</th>
+                                    <th class="text-left p-3">Tutorial 1</th>
+                                    <th class="text-left p-3">Tutorial 2</th>
+                                    <th class="text-left p-3">CA 1</th>
+                                    <th class="text-left p-3">CA 2</th>
+                                    <th class="text-left p-3">Final Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">23N224 - Arun Kumar</td>
+                                    <td class="p-3">18/20</td>
+                                    <td class="p-3">-</td>
+                                    <td class="p-3">85/100</td>
+                                    <td class="p-3">-</td>
+                                    <td class="p-3 font-bold text-green-600">A</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">23N225 - Priya Sharma</td>
+                                    <td class="p-3">16/20</td>
+                                    <td class="p-3">-</td>
+                                    <td class="p-3">78/100</td>
+                                    <td class="p-3">-</td>
+                                    <td class="p-3 font-bold text-blue-600">B+</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Detail Page -->
+    <div id="testDetail" class="hidden min-h-screen bg-gray-50">
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <button onclick="backToCourse()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                    <div>
+                        <h1 id="testTitle" class="text-xl font-bold">Tutorial 1</h1>
+                        <p id="testCourse" class="text-blue-100 text-sm">Advanced Mathematics</p>
+                    </div>
+                </div>
+                <button onclick="showResults()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300">
+                    📊 Results
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-4">
+            <!-- Test Setup -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Test Setup</h3>
+                <div class="space-y-3">
+                    <input type="date" id="testDate" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-blue-100 text-blue-700 py-2 px-4 rounded-xl text-sm font-semibold hover:bg-blue-200 transition-colors">
+                            📄 Upload Question Paper
+                        </button>
+                        <button class="flex-1 bg-green-100 text-green-700 py-2 px-4 rounded-xl text-sm font-semibold hover:bg-green-200 transition-colors">
+                            📋 Upload Answer Key
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students List -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-gray-800">Students (56)</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="selectAllScanned()" class="bg-purple-100 text-purple-700 px-3 py-1 rounded-lg text-sm font-semibold hover:bg-purple-200 transition-colors">
+                            Select All Scanned
+                        </button>
+                        <button onclick="bulkAICorrection()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
+                            🤖 Bulk AI Correction
+                        </button>
+                    </div>
+                </div>
+                <div id="studentsList" class="space-y-2 max-h-96 overflow-y-auto">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 student-checkbox" data-student="23N224">
+                            <div>
+                                <p class="font-semibold text-gray-800">23N224</p>
+                                <p class="text-sm text-gray-600">Arun Kumar</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="markAbsent('23N224')" class="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-red-200 transition-colors">
+                                Absent
+                            </button>
+                            <button onclick="scanPaper('23N224')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors">
+                                📱 Scan Paper
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 student-checkbox" data-student="23N225">
+                            <div>
+                                <p class="font-semibold text-gray-800">23N225</p>
+                                <p class="text-sm text-gray-600">Priya Sharma</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="markAbsent('23N225')" class="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-red-200 transition-colors">
+                                Absent
+                            </button>
+                            <button onclick="scanPaper('23N225')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors">
+                                📱 Scan Paper
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-xl border border-green-200">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 student-checkbox scanned-paper" data-student="23N226" checked>
+                            <div>
+                                <p class="font-semibold text-gray-800">23N226</p>
+                                <p class="text-sm text-gray-600">Raj Patel</p>
+                                <p class="text-xs text-green-600">✅ Scanned & Ready for AI</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="individualAICorrection('23N226')" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-purple-700 transition-colors">
+                                🤖 AI Correct
+                            </button>
+                            <button onclick="scanPaper('23N226')" class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+                                ✅ Scanned
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl border border-red-200">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 student-checkbox" data-student="23N227" disabled>
+                            <div>
+                                <p class="font-semibold text-gray-800">23N227</p>
+                                <p class="text-sm text-gray-600">Meera Singh</p>
+                                <p class="text-xs text-red-600">❌ Absent</p>
+                            </div>
+                        </div>
+                        <div class="bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+                            Absent
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanning Interface -->
+    <div id="scanInterface" class="hidden min-h-screen bg-gray-50">
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center">
+                <button onclick="backToTest()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                <div>
+                    <h1 id="scanTitle" class="text-xl font-bold">Scanning Paper</h1>
+                    <p id="scanSubtitle" class="text-sm opacity-90">Student: 23N224</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4">
+            <div class="bg-white rounded-xl p-6 text-center shadow-sm mb-4">
+                <div class="w-32 h-32 bg-gray-100 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                    <span class="text-4xl">📷</span>
+                </div>
+                <p class="text-gray-600 mb-4">Tap to scan answer sheet pages</p>
+                <button onclick="scanPage()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold mb-2 hover:bg-blue-700 transition-colors">
+                    Scan Page
+                </button>
+                <div id="scannedPages" class="text-sm text-gray-600">Pages scanned: 0</div>
+            </div>
+
+            <!-- AI Correction Selection -->
+            <div id="correctionOptions" class="bg-white rounded-xl p-4 shadow-sm mb-4 hidden">
+                <h3 class="font-semibold text-gray-800 mb-3">AI Correction Options</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" id="selectForCorrection" class="w-4 h-4 text-purple-600">
+                        <span class="text-gray-700">Select this paper for AI correction</span>
+                    </label>
+                    <p class="text-sm text-gray-600">You can also add papers to correction queue later from the course page</p>
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="finishScanning()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                    Done Scanning
+                </button>
+                <button onclick="saveAndNext()" id="saveNextBtn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-semibold hidden hover:bg-blue-700 transition-colors">
+                    Save & Next Student
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Correction Interface -->
+    <div id="correctionInterface" class="hidden min-h-screen bg-gray-50">
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center">
+                <button onclick="backToTest()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                <div>
+                    <h1 class="text-xl font-bold">AI Correction Results</h1>
+                    <p id="correctionSubtitle" class="text-sm opacity-90">Tutorial 1 - Advanced Mathematics</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-4">
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Correction Summary</h3>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-bold text-green-600">23</div>
+                        <div class="text-sm text-gray-600">Completed</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-blue-600">5</div>
+                        <div class="text-sm text-gray-600">In Progress</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-yellow-600">12</div>
+                        <div class="text-sm text-gray-600">Pending</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Student Results</h3>
+                <div class="space-y-3 max-h-96 overflow-y-auto">
+                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                        <div>
+                            <p class="font-semibold text-gray-800">23N226 - Raj Patel</p>
+                            <p class="text-sm text-green-600">✅ Corrected: 85/100</p>
+                        </div>
+                        <button onclick="viewCorrection('23N226')" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div>
+                            <p class="font-semibold text-gray-800">23N224 - Arun Kumar</p>
+                            <p class="text-sm text-blue-600">🔄 Processing...</p>
+                        </div>
+                        <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div>
+                            <p class="font-semibold text-gray-800">23N225 - Priya Sharma</p>
+                            <p class="text-sm text-yellow-600">⏳ Pending</p>
+                        </div>
+                        <button onclick="startCorrection('23N225')" class="bg-purple-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-600 transition-colors">
+                            Start AI
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div id="addClassModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h2 class="text-xl font-bold text-psg-maroon mb-4">Add New Class</h2>
+            <div class="space-y-4">
+                <select id="yearSelect" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+                <select id="deptSelect" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Department</option>
+                    <option value="BE CSE AI ML">BE CSE AI ML</option>
+                    <option value="BE CSE G1">BE CSE G1</option>
+                    <option value="BE CSE G2">BE CSE G2</option>
+                    <option value="BE ECE">BE ECE</option>
+                    <option value="BE EEE">BE EEE</option>
+                </select>
+                <input type="text" id="courseCode" placeholder="Course Code (e.g., 23N304)" 
+                       class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="courseName" placeholder="Course Name (e.g., Operating Systems)" 
+                       class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex space-x-3">
+                    <button onclick="addClass()" class="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+                        Add Class
+                    </button>
+                    <button onclick="closeAddClass()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-400 transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Code Modal -->
+    <div id="shareCodeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Share Class Code</h2>
+            <div class="text-center">
+                <div class="bg-gray-100 p-4 rounded-xl mb-4">
+                    <p class="text-2xl font-bold text-blue-600" id="classCode">MATH2024</p>
+                </div>
+                <p class="text-gray-600 mb-4">Students can join using this code</p>
+                <div class="flex space-x-3">
+                    <button onclick="copyClassCode()" class="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+                        📋 Copy Code
+                    </button>
+                    <button onclick="closeShareCode()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-400 transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Test Modal -->
+    <div id="createTestModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Create New Test</h2>
+            <div class="space-y-4">
+                <input type="text" id="testName" placeholder="Test Name (e.g., Tutorial 3)" 
+                       class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="testType" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Test Type</option>
+                    <option value="tutorial">Tutorial</option>
+                    <option value="ca">Continuous Assessment</option>
+                    <option value="practice">Practice Test</option>
+                    <option value="final">Final Exam</option>
+                </select>
+                <input type="date" id="testDate" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="notifyStudents" checked class="w-4 h-4 text-blue-600">
+                    <label for="notifyStudents" class="text-gray-700">Notify students about new test</label>
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="createNewTest()" class="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors">
+                        Create Test
+                    </button>
+                    <button onclick="closeCreateTest()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-400 transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Submissions Page -->
+    <div id="submissionsPage" class="hidden min-h-screen bg-gray-50">
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <button onclick="backToCourse()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                    <div>
+                        <h1 class="text-xl font-bold">Student Submissions</h1>
+                        <p id="submissionsCourse" class="text-blue-100 text-sm">Advanced Mathematics</p>
+                    </div>
+                </div>
+                <button onclick="bulkCorrectSubmissions()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300">
+                    🤖 Bulk AI Correction
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-4">
+            <!-- Assignment Filter -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Filter by Assignment</h3>
+                <select id="assignmentFilter" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="filterSubmissions()">
+                    <option value="all">All Assignments</option>
+                    <option value="calculus">Calculus Problem Set</option>
+                    <option value="tutorial1">Tutorial 1</option>
+                    <option value="ca1">CA 1</option>
+                </select>
+            </div>
+
+            <!-- Submissions List -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-gray-800">PDF Submissions (24)</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="selectAllSubmissions()" class="bg-purple-100 text-purple-700 px-3 py-1 rounded-lg text-sm font-semibold hover:bg-purple-200 transition-colors">
+                            Select All
+                        </button>
+                        <button onclick="downloadSelected()" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-sm font-semibold hover:bg-blue-200 transition-colors">
+                            📥 Download Selected
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="submissionsList" class="space-y-3 max-h-96 overflow-y-auto">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 submission-checkbox" data-student="23N224">
+                            <div>
+                                <p class="font-semibold text-gray-800">23N224 - Arun Kumar</p>
+                                <p class="text-sm text-gray-600">Calculus Problem Set</p>
+                                <p class="text-xs text-green-600">✅ Submitted</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="viewSubmission('23N224')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-blue-200 transition-colors">
+                                👁️ View PDF
+                            </button>
+                            <button onclick="correctSubmission('23N224')" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-purple-700 transition-colors">
+                                🤖 AI Correct
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 submission-checkbox" data-student="23N225">
+                            <div>
+                                <p class="font-semibold text-gray-800">23N225 - Priya Sharma</p>
+                                <p class="text-sm text-gray-600">Calculus Problem Set</p>
+                                <p class="text-xs text-green-600">✅ Submitted</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="viewSubmission('23N225')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-blue-200 transition-colors">
+                                👁️ View PDF
+                            </button>
+                            <button onclick="correctSubmission('23N225')" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-purple-700 transition-colors">
+                                🤖 AI Correct
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl border border-blue-200">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 submission-checkbox" data-student="23N226" disabled>
+                            <div>
+                                <p class="font-semibold text-gray-800">23N226 - Raj Patel</p>
+                                <p class="text-sm text-gray-600">Calculus Problem Set</p>
+                                <p class="text-xs text-blue-600">🔄 AI Correction in Progress</p>
+                            </div>
+                        </div>
+                        <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-xl border border-green-200">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-4 h-4 text-purple-600 submission-checkbox" data-student="23N227" disabled>
+                            <div>
+                                <p class="font-semibold text-gray-800">23N227 - Meera Singh</p>
+                                <p class="text-sm text-gray-600">Calculus Problem Set</p>
+                                <p class="text-xs text-green-600">✅ Corrected: 92/100</p>
+                            </div>
+                        </div>
+                        <button onclick="viewCorrectionDetails('23N227')" class="bg-green-600 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-green-700 transition-colors">
+                            📊 View Results
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correction Statistics -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Correction Progress</h3>
+                <div class="grid grid-cols-4 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-bold text-green-600">8</div>
+                        <div class="text-sm text-gray-600">Corrected</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-blue-600">3</div>
+                        <div class="text-sm text-gray-600">In Progress</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-yellow-600">13</div>
+                        <div class="text-sm text-gray-600">Pending</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-gray-600">24</div>
+                        <div class="text-sm text-gray-600">Total</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settingsPage" class="hidden min-h-screen bg-gray-50">
+        <div class="gradient-bg text-white p-4">
+            <div class="flex items-center">
+                <button onclick="showDashboard()" class="mr-3 text-2xl hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all duration-300">←</button>
+                <h1 class="text-xl font-bold">Settings</h1>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Appearance</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Dark theme</span>
+                        <input type="checkbox" id="darkTheme" class="w-5 h-5 text-blue-600" onchange="toggleDarkTheme()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Notifications</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Email notifications</span>
+                        <input type="checkbox" checked class="w-5 h-5 text-blue-600">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Deadline reminders</span>
+                        <input type="checkbox" checked class="w-5 h-5 text-blue-600">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Auto-notify on grade publish</span>
+                        <input type="checkbox" checked class="w-5 h-5 text-blue-600">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">AI Correction Settings</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Auto-correct after scanning</span>
+                        <input type="checkbox" checked class="w-5 h-5 text-blue-600">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Send correction reports</span>
+                        <input type="checkbox" checked class="w-5 h-5 text-blue-600">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h3 class="font-semibold text-gray-800 mb-3">Privacy</h3>
+                <div class="space-y-3">
+                    <button class="w-full text-left text-gray-700 py-2">Data Export</button>
+                    <button class="w-full text-left text-gray-700 py-2">Privacy Policy</button>
+                    <button class="w-full text-left text-red-600 py-2">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = '';
+        let currentUserEmail = '';
+        let selectedRole = '';
+        let sidebarOpen = false;
+        let currentCourse = null;
+        let currentTest = '';
+        let scannedPagesCount = 0;
+
+        function selectRole(role) {
+            selectedRole = role;
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            event.target.closest('.role-card').classList.add('selected');
+            
+            // Show login options
+            document.getElementById('loginOptions').classList.remove('hidden');
+            
+            // Update button texts
+            const signInButtonText = role === 'teacher' ? 'Sign In as Teacher' : 'Sign In as Student';
+            const signUpButtonText = role === 'teacher' ? 'Sign Up as Teacher' : 'Sign Up as Student';
+            document.getElementById('signInButtonText').textContent = signInButtonText;
+            document.getElementById('signUpButtonText').textContent = signUpButtonText;
+        }
+
+        function showSignIn() {
+            document.getElementById('loginOptions').classList.add('hidden');
+            document.getElementById('signInForm').classList.remove('hidden');
+        }
+
+        function showSignUp() {
+            document.getElementById('loginOptions').classList.add('hidden');
+            document.getElementById('signUpForm').classList.remove('hidden');
+        }
+
+        function backToOptions() {
+            document.getElementById('signInForm').classList.add('hidden');
+            document.getElementById('signUpForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+            document.getElementById('loginOptions').classList.remove('hidden');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('signInForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.remove('hidden');
+        }
+
+        function backToSignIn() {
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+            document.getElementById('signInForm').classList.remove('hidden');
+        }
+
+        function signIn() {
+            const name = document.getElementById('signInName').value;
+            const password = document.getElementById('signInPassword').value;
+            
+            if (!name.trim() || !password.trim()) {
+                alert('Please enter both name and password');
+                return;
+            }
+
+            if (!selectedRole) {
+                alert('Please select your role first');
+                return;
+            }
+
+            currentUser = selectedRole === 'teacher' ? 'Dr. ' + name : name;
+            currentUserEmail = name.toLowerCase().replace(/\s+/g, '') + '@psgtech.ac.in';
+            
+            document.getElementById('welcomeText').textContent = `Welcome, ${currentUser}`;
+            document.getElementById('sidebarName').textContent = currentUser;
+            document.getElementById('profileName').value = currentUser;
+            document.getElementById('profileEmail').value = currentUserEmail;
+            
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function signUp() {
+            const name = document.getElementById('signUpName').value;
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            if (!selectedRole) {
+                alert('Please select your role first');
+                return;
+            }
+
+            currentUser = name;
+            currentUserEmail = email;
+            
+            document.getElementById('welcomeText').textContent = `Welcome, ${currentUser}`;
+            document.getElementById('sidebarName').textContent = currentUser;
+            document.getElementById('profileName').value = name;
+            document.getElementById('profileEmail').value = email;
+            
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function resetPassword() {
+            const name = document.getElementById('forgotName').value;
+            
+            if (!name.trim()) {
+                alert('Please enter your name');
+                return;
+            }
+
+            alert('Password reset link sent to your registered email!');
+            backToSignIn();
+        }
+
+        function shareClassCode(code) {
+            document.getElementById('classCode').textContent = code;
+            document.getElementById('shareCodeModal').classList.remove('hidden');
+            
+            // Hide the menu
+            document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+
+        function createNewTest() {
+            const testName = document.getElementById('testName').value;
+            const testType = document.getElementById('testType').value;
+            const testDate = document.getElementById('testDate').value;
+            const notifyStudents = document.getElementById('notifyStudents').checked;
+
+            if (!testName || !testType || !testDate) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            if (notifyStudents) {
+                alert(`Test "${testName}" created successfully! Students have been notified.`);
+            } else {
+                alert(`Test "${testName}" created successfully!`);
+            }
+            
+            closeCreateTest();
+        }
+
+        function closeCreateTest() {
+            document.getElementById('createTestModal').classList.add('hidden');
+            // Reset form
+            document.getElementById('testName').value = '';
+            document.getElementById('testType').value = '';
+            document.getElementById('testDate').value = '';
+            document.getElementById('notifyStudents').checked = true;
+        }
+
+        function showResults() {
+            hideAllPages();
+            document.getElementById('correctionInterface').classList.remove('hidden');
+        }
+
+        function extractNameInfo(fullName) {
+            const parts = fullName.trim().split(' ');
+            const prefix = parts[0].includes('.') ? parts[0] : '';
+            const firstName = prefix ? parts[1] : parts[0];
+            return { prefix, firstName };
+        }
+
+        function login() {
+            const nameInput = document.getElementById('userName').value;
+            const emailInput = document.getElementById('userEmail').value;
+            
+            if (!nameInput.trim() || !emailInput.trim()) {
+                alert('Please enter both your name and email');
+                return;
+            }
+
+            if (!selectedRole) {
+                alert('Please select your role (Teacher or Student)');
+                return;
+            }
+
+            const { prefix, firstName } = extractNameInfo(nameInput);
+            currentUser = prefix ? `${prefix} ${firstName}` : firstName;
+            currentUserEmail = emailInput;
+            
+            document.getElementById('welcomeText').textContent = `Welcome back, ${currentUser}`;
+            document.getElementById('sidebarName').textContent = currentUser;
+            document.getElementById('profileName').value = nameInput;
+            document.getElementById('profileEmail').value = emailInput;
+            
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (sidebarOpen) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                sidebarOpen = false;
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                sidebarOpen = true;
+            }
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('overlay').classList.add('hidden');
+            sidebarOpen = false;
+        }
+
+        function showDashboard() {
+            hideAllPages();
+            document.getElementById('dashboard').classList.remove('hidden');
+            closeSidebar();
+        }
+
+        function showProfile() {
+            hideAllPages();
+            document.getElementById('profilePage').classList.remove('hidden');
+            closeSidebar();
+        }
+
+        function showSettings() {
+            hideAllPages();
+            document.getElementById('settingsPage').classList.remove('hidden');
+            closeSidebar();
+        }
+
+        function hideAllPages() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('profilePage').classList.add('hidden');
+            document.getElementById('courseDetail').classList.add('hidden');
+            document.getElementById('testDetail').classList.add('hidden');
+            document.getElementById('scanInterface').classList.add('hidden');
+            document.getElementById('correctionInterface').classList.add('hidden');
+            document.getElementById('settingsPage').classList.add('hidden');
+            document.getElementById('submissionsPage').classList.add('hidden');
+        }
+
+        function toggleCourseMenu(courseId) {
+            // Close all other menus
+            document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+                if (menu.id !== courseId + 'Menu') {
+                    menu.classList.add('hidden');
+                }
+            });
+            
+            // Toggle current menu
+            const menu = document.getElementById(courseId + 'Menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function unenrollFromCourse(courseName) {
+            if (confirm(`Are you sure you want to unenroll from ${courseName}?`)) {
+                alert(`You have been unenrolled from ${courseName}`);
+                // Hide the menu
+                document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+            }
+        }
+
+        function archiveCourseFromCard(courseName) {
+            if (confirm(`Are you sure you want to archive ${courseName}?`)) {
+                alert(`${courseName} has been archived successfully!`);
+                // Hide the menu
+                document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+            }
+        }
+
+        function openCourse(courseName, instructor, color) {
+            currentCourse = { name: courseName, instructor, color };
+            
+            document.getElementById('courseTitle').textContent = courseName;
+            document.getElementById('courseInstructor').textContent = instructor;
+            
+            const header = document.getElementById('courseHeader');
+            header.className = `gradient-${color} text-white p-4`;
+            
+            hideAllPages();
+            document.getElementById('courseDetail').classList.remove('hidden');
+            showCourseTab('stream');
+        }
+
+        function showCourseTab(tabName) {
+            // Hide all course content
+            document.querySelectorAll('.course-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active state from all tabs
+            document.querySelectorAll('.course-tab').forEach(tab => {
+                tab.classList.remove('border-blue-500', 'text-blue-600');
+                tab.classList.add('border-transparent');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            
+            // Activate selected tab
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+            activeTab.classList.add('border-blue-500', 'text-blue-600');
+            activeTab.classList.remove('border-transparent');
+        }
+
+        function openTest(testName) {
+            currentTest = testName;
+            document.getElementById('testTitle').textContent = testName;
+            document.getElementById('testCourse').textContent = currentCourse.name;
+            hideAllPages();
+            document.getElementById('testDetail').classList.remove('hidden');
+        }
+
+        function showCorrection() {
+            document.getElementById('correctionSubtitle').textContent = `${currentTest} - ${currentCourse.name}`;
+            hideAllPages();
+            document.getElementById('correctionInterface').classList.remove('hidden');
+        }
+
+        function markAbsent(rollNo) {
+            if (confirm(`Mark ${rollNo} as absent for this test?`)) {
+                // Find the student row and update it
+                const checkbox = document.querySelector(`[data-student="${rollNo}"]`);
+                const studentRow = checkbox.closest('.flex');
+                
+                studentRow.classList.remove('bg-gray-50');
+                studentRow.classList.add('bg-red-50', 'border', 'border-red-200');
+                
+                const statusDiv = studentRow.querySelector('.text-sm.text-gray-600').parentElement;
+                statusDiv.innerHTML += '<p class="text-xs text-red-600">❌ Absent</p>';
+                
+                // Replace buttons with absent status
+                const buttonContainer = studentRow.querySelector('.flex.space-x-2');
+                buttonContainer.innerHTML = '<div class="bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">Absent</div>';
+                
+                checkbox.disabled = true;
+                
+                alert(`${rollNo} marked as absent`);
+            }
+        }
+
+        function scanPaper(rollNo) {
+            document.getElementById('scanSubtitle').textContent = `Student: ${rollNo}`;
+            hideAllPages();
+            document.getElementById('scanInterface').classList.remove('hidden');
+            scannedPagesCount = 0;
+            updateScannedPages();
+        }
+
+        function scanPage() {
+            scannedPagesCount++;
+            updateScannedPages();
+        }
+
+        function updateScannedPages() {
+            document.getElementById('scannedPages').textContent = `Pages scanned: ${scannedPagesCount}`;
+        }
+
+        function finishScanning() {
+            if (scannedPagesCount === 0) {
+                alert('Please scan at least one page');
+                return;
+            }
+            
+            // Show correction options after scanning
+            document.getElementById('correctionOptions').classList.remove('hidden');
+            document.getElementById('saveNextBtn').classList.remove('hidden');
+            
+            alert(`All ${scannedPagesCount} pages converted to PDF and saved!`);
+        }
+
+        function saveAndNext() {
+            const isSelected = document.getElementById('selectForCorrection').checked;
+            const currentStudent = document.getElementById('scanSubtitle').textContent.split(': ')[1];
+            
+            if (isSelected) {
+                alert(`Paper for ${currentStudent} saved and added to AI correction queue!`);
+            } else {
+                alert(`Paper for ${currentStudent} saved successfully!`);
+            }
+            
+            // Reset for next student
+            scannedPagesCount = 0;
+            updateScannedPages();
+            document.getElementById('correctionOptions').classList.add('hidden');
+            document.getElementById('saveNextBtn').classList.add('hidden');
+            document.getElementById('selectForCorrection').checked = false;
+            
+            backToTest();
+        }
+
+        function selectAllScanned() {
+            const scannedCheckboxes = document.querySelectorAll('.scanned-paper');
+            scannedCheckboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            alert('All scanned papers selected for AI correction!');
+        }
+
+        function bulkAICorrection() {
+            const selectedCheckboxes = document.querySelectorAll('.student-checkbox:checked:not([disabled])');
+            if (selectedCheckboxes.length === 0) {
+                alert('Please select at least one scanned paper for AI correction.');
+                return;
+            }
+            
+            const studentCount = selectedCheckboxes.length;
+            alert(`Starting AI correction for ${studentCount} selected papers. Processing will begin shortly!`);
+            
+            // Simulate processing
+            selectedCheckboxes.forEach((checkbox, index) => {
+                setTimeout(() => {
+                    const studentRow = checkbox.closest('.flex');
+                    studentRow.classList.remove('bg-green-50', 'border-green-200');
+                    studentRow.classList.add('bg-blue-50', 'border-blue-200');
+                    
+                    const statusText = studentRow.querySelector('.text-xs');
+                    if (statusText) {
+                        statusText.textContent = '🔄 AI Correction in Progress';
+                        statusText.className = 'text-xs text-blue-600';
+                    }
+                    
+                    checkbox.disabled = true;
+                }, index * 1000);
+            });
+        }
+
+        function individualAICorrection(studentId) {
+            alert(`Starting AI correction for student ${studentId}. Processing will begin shortly!`);
+            
+            // Find and update the student's row
+            const checkbox = document.querySelector(`[data-student="${studentId}"]`);
+            const studentRow = checkbox.closest('.flex');
+            
+            studentRow.classList.remove('bg-green-50', 'border-green-200');
+            studentRow.classList.add('bg-blue-50', 'border-blue-200');
+            
+            const statusText = studentRow.querySelector('.text-xs');
+            if (statusText) {
+                statusText.textContent = '🔄 AI Correction in Progress';
+                statusText.className = 'text-xs text-blue-600';
+            }
+            
+            checkbox.disabled = true;
+            
+            // Hide the individual AI correct button
+            const aiButton = studentRow.querySelector('button[onclick*="individualAICorrection"]');
+            if (aiButton) {
+                aiButton.style.display = 'none';
+            }
+        }
+
+        function viewCorrection(studentId) {
+            alert(`Viewing detailed correction for student ${studentId}`);
+        }
+
+        function startCorrection(studentId) {
+            alert(`Starting AI correction for student ${studentId}`);
+        }
+
+        function backToCourse() {
+            hideAllPages();
+            document.getElementById('courseDetail').classList.remove('hidden');
+        }
+
+        function backToTest() {
+            hideAllPages();
+            document.getElementById('testDetail').classList.remove('hidden');
+        }
+
+        function showAddClass() {
+            document.getElementById('addClassModal').classList.remove('hidden');
+        }
+
+        function closeAddClass() {
+            document.getElementById('addClassModal').classList.add('hidden');
+        }
+
+        function addClass() {
+            const year = document.getElementById('yearSelect').value;
+            const dept = document.getElementById('deptSelect').value;
+            const code = document.getElementById('courseCode').value;
+            const name = document.getElementById('courseName').value;
+
+            if (!year || !dept || !code || !name) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            alert('Class added successfully!');
+            closeAddClass();
+        }
+
+        function showShareCode() {
+            document.getElementById('shareCodeModal').classList.remove('hidden');
+        }
+
+        function closeShareCode() {
+            document.getElementById('shareCodeModal').classList.add('hidden');
+        }
+
+        function copyClassCode() {
+            const code = document.getElementById('classCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Class code copied to clipboard!');
+            });
+        }
+
+        function uploadProfilePicture() {
+            document.getElementById('profileImageInput').click();
+        }
+
+        function handleProfileImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const profilePicture = document.getElementById('profilePicture');
+                    profilePicture.innerHTML = `<img src="${e.target.result}" alt="Profile" class="w-full h-full object-cover rounded-full">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProfile() {
+            alert('Profile saved successfully!');
+        }
+
+        function publishGrades() {
+            alert('All grades have been published! Students can now view their results.');
+        }
+
+        function createAssignment() {
+            alert('Create assignment feature coming soon!');
+        }
+
+        function showSubmissions() {
+            document.getElementById('submissionsCourse').textContent = currentCourse.name;
+            hideAllPages();
+            document.getElementById('submissionsPage').classList.remove('hidden');
+        }
+
+        function sendReminder() {
+            alert('Deadline reminder sent to all students! They will receive an email notification.');
+        }
+
+        function toggleDarkTheme() {
+            const isDark = document.getElementById('darkTheme').checked;
+            if (isDark) {
+                document.body.classList.add('dark');
+                alert('Dark theme enabled! (Feature coming soon)');
+            } else {
+                document.body.classList.remove('dark');
+                alert('Light theme enabled!');
+            }
+        }
+
+        function filterSubmissions() {
+            const filter = document.getElementById('assignmentFilter').value;
+            alert(`Filtering submissions by: ${filter}`);
+        }
+
+        function selectAllSubmissions() {
+            const checkboxes = document.querySelectorAll('.submission-checkbox:not([disabled])');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            alert('All available submissions selected!');
+        }
+
+        function downloadSelected() {
+            const selectedCheckboxes = document.querySelectorAll('.submission-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('Please select at least one submission to download.');
+                return;
+            }
+            alert(`Downloading ${selectedCheckboxes.length} selected submissions as ZIP file...`);
+        }
+
+        function viewSubmission(studentId) {
+            alert(`Opening PDF submission for student ${studentId} in new tab...`);
+        }
+
+        function correctSubmission(studentId) {
+            alert(`Starting AI correction for ${studentId}'s submission...`);
+            
+            // Update the UI to show processing
+            const checkbox = document.querySelector(`[data-student="${studentId}"]`);
+            const studentRow = checkbox.closest('.flex');
+            
+            studentRow.classList.remove('bg-gray-50');
+            studentRow.classList.add('bg-blue-50', 'border', 'border-blue-200');
+            
+            const statusText = studentRow.querySelector('.text-xs');
+            statusText.textContent = '🔄 AI Correction in Progress';
+            statusText.className = 'text-xs text-blue-600';
+            
+            checkbox.disabled = true;
+            
+            // Hide the correct button and show spinner
+            const buttonContainer = studentRow.querySelector('.flex.space-x-2');
+            buttonContainer.innerHTML = '<div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>';
+        }
+
+        function bulkCorrectSubmissions() {
+            const selectedCheckboxes = document.querySelectorAll('.submission-checkbox:checked:not([disabled])');
+            if (selectedCheckboxes.length === 0) {
+                alert('Please select at least one submission for bulk AI correction.');
+                return;
+            }
+            
+            const studentCount = selectedCheckboxes.length;
+            alert(`Starting bulk AI correction for ${studentCount} selected submissions. Processing will begin shortly!`);
+            
+            // Simulate processing for each selected submission
+            selectedCheckboxes.forEach((checkbox, index) => {
+                setTimeout(() => {
+                    const studentRow = checkbox.closest('.flex');
+                    studentRow.classList.remove('bg-gray-50');
+                    studentRow.classList.add('bg-blue-50', 'border', 'border-blue-200');
+                    
+                    const statusText = studentRow.querySelector('.text-xs');
+                    statusText.textContent = '🔄 AI Correction in Progress';
+                    statusText.className = 'text-xs text-blue-600';
+                    
+                    checkbox.disabled = true;
+                    
+                    const buttonContainer = studentRow.querySelector('.flex.space-x-2');
+                    buttonContainer.innerHTML = '<div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>';
+                }, index * 500);
+            });
+        }
+
+        function viewCorrectionDetails(studentId) {
+            alert(`Viewing detailed correction results for student ${studentId}`);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                hideAllPages();
+                document.getElementById('loginPage').classList.remove('hidden');
+                currentUser = '';
+                currentUserEmail = '';
+                selectedRole = '';
+                closeSidebar();
+                
+                // Reset login form
+                document.getElementById('loginForm').classList.add('hidden');
+                document.querySelectorAll('.role-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.getElementById('userName').value = '';
+                document.getElementById('userEmail').value = '';
+            }
+        }
+
+        // Close menus when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('[onclick*="toggleCourseMenu"]') && !event.target.closest('[id$="Menu"]')) {
+                document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+            }
+        });
+
+        // Add touch/click effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const interactiveElements = document.querySelectorAll('button, .course-card, .sidebar-item, .test-card, .role-card');
+            
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                element.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9728e02472ab7f71',t:'MTc1NTc2NjE1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
